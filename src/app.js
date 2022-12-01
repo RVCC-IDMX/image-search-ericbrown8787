@@ -20,10 +20,14 @@ form.addEventListener('submit', async (event) => {
     .catch((err) => console.error(err));
 
   /*
-  Loop through the results[] array. For each result, create a clone of the
-  template and append it to the DOM element with the .container class.
-  */
-  if (response.results) {
+    confirming that response.results exists and is an array that can be iterated over with .forEach
+    */
+  // if (response.results && Array.isArray(response.results)) {
+  try {
+    /*
+      Loop through the results[] array. For each result, create a clone of the
+      template and append it to the DOM element with the .container class.
+      */
     response.results.forEach((item) => {
       const cardClone = document.querySelector('#template').content.firstElementChild.cloneNode(true);
       const postImg = cardClone.querySelector('.post__img');
@@ -60,7 +64,7 @@ form.addEventListener('submit', async (event) => {
 
       container.appendChild(cardClone);
     });
-  } else {
+  } catch (error) {
     container.textContent = 'Oops! We were unable to retrieve your results. :(';
   }
 });
