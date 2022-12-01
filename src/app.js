@@ -1,7 +1,10 @@
 const form = document.querySelector('.search-form');
+const container = document.querySelector('.container');
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
+
+  container.querySelectorAll('*').forEach((element) => element.remove);
 
   const formData = new FormData(event.target);
 
@@ -14,16 +17,14 @@ form.addEventListener('submit', async (event) => {
     .then((res) => res.json())
     .catch((err) => console.error(err));
 
-  console.log(response);
+  response.results.forEach((item) => {
+    const cardClone = document.querySelector('#template').content.firstElementChild.cloneNode(true);
+    const postImg = cardClone.querySelector('.post__img');
+    postImg.src = item.urls.small;
+    postImg.alt = item.alt_description;
 
-  /*
-  some sample code
-    const dataObj = response.results[0];
-    const postImg = clone.querySelector('.post__img');
-    postImg.src = dataObj.urls.small;
-    postImg.alt = dataObj.alt_description;
-  */
-
+    container.appendChild(cardClone);
+  });
   /*
     Loop through the results[] array. For each result, create a clone of the
     template and append it to the DOM element with the .container class.
