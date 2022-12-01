@@ -4,7 +4,9 @@ const container = document.querySelector('.container');
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  container.querySelectorAll('*').forEach((element) => element.remove);
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
 
   const formData = new FormData(event.target);
 
@@ -20,8 +22,25 @@ form.addEventListener('submit', async (event) => {
   response.results.forEach((item) => {
     const cardClone = document.querySelector('#template').content.firstElementChild.cloneNode(true);
     const postImg = cardClone.querySelector('.post__img');
+    const postUser = cardClone.querySelector('.post__user');
+    const postDescription = cardClone.querySelector('.post__desc');
+    let formattedDescription = item.description;
+    if (formattedDescription) {
+      if (typeof formattedDescription === 'string' && formattedDescription.length > 100) {
+        formattedDescription = `${formattedDescription.slice(0, 100)}...`;
+      }
+    } else {
+      formattedDescription = '';
+    }
+
     postImg.src = item.urls.small;
     postImg.alt = item.alt_description;
+
+    if (item.user.first_name || item.user.last_name) {
+      postUser.innerText = `by ${item.user.first_name || ''} ${item.user.last_name || ''}`;
+    }
+
+    postDescription.innerText = `${formattedDescription}`;
 
     container.appendChild(cardClone);
   });
